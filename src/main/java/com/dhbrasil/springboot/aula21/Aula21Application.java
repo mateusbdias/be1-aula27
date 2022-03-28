@@ -13,9 +13,9 @@ public class Aula21Application {
 		SpringApplication.run(Aula21Application.class, args);
 	}
 
-	@GetMapping
+	/*@GetMapping
 	public String Ola() {
 		return "CTD 2022 c/ Spring Boot!";
-	}
+	}*/
 
 }
