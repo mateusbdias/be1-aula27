@@ -15,7 +15,7 @@ public class ConfigJDBC {
         this.jdbcDriver = "com.mysql.cj.jdbc.Driver";
         this.dbUrl = "jdbc:mysql://localhost:3306/clinica";
         this.nomeUsuario = "root";
-        this.senhaUsuario = "HJdmib:SQL";
+        this.senhaUsuario = "";
     }
 
     public Connection connectToDB() {
