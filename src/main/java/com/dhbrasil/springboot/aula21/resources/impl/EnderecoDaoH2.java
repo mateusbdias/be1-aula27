@@ -1,19 +1,19 @@
-package com.dhbrasil.springboot.aula21.dao.impl;
+package com.dhbrasil.springboot.aula21.resources.impl;
 
-import com.dhbrasil.springboot.aula21.dao.IDao;
-import com.dhbrasil.springboot.aula21.dao.config.ConfigJDBC;
-import com.dhbrasil.springboot.aula21.model.Dentista;
+import com.dhbrasil.springboot.aula21.resources.IDao;
+import com.dhbrasil.springboot.aula21.resources.config.ConfigJDBC;
+import com.dhbrasil.springboot.aula21.model.Endereco;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DentistaDaoH2 implements IDao<Dentista> {
+public class EnderecoDaoH2 implements IDao<Endereco> {
 
     private ConfigJDBC configJDBC;
 
-    public DentistaDaoH2() {
+    public EnderecoDaoH2() {
         this.configJDBC = new ConfigJDBC();
     }
 
@@ -21,24 +21,25 @@ public class DentistaDaoH2 implements IDao<Dentista> {
 
     // Salvar
     @Override
-    public Dentista salvar(Dentista dentista) {
+    public Endereco salvar(Endereco endereco) {
         Connection conn = configJDBC.connectToDB();
         PreparedStatement ps = null;
 
-        String query = String.format("INSERT INTO dentistas " +
-                "(nome, email, numMatricula, atendeConvenio) " +
-                "VALUES ('%s', '%s', '%s', '%s')",
-                dentista.getNome(),
-                dentista.getEmail(),
-                dentista.getNumMatricula(),
-                dentista.getAtendeConvenio());
+        String query = String.format("INSERT INTO enderecos " +
+                "(rua, numero, bairro, cidade, estado) " +
+                "VALUES ('%s', '%s', '%s', '%s', '%s')",
+                endereco.getRua(),
+                endereco.getNumero(),
+                endereco.getBairro(),
+                endereco.getCidade(),
+                endereco.getEstado());
 
         try {
             ps = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.executeUpdate();
             ResultSet keys = ps.getGeneratedKeys();
             if (keys.next()) {
-                dentista.setId(keys.getInt(1));
+                endereco.setId(keys.getInt(1));
             }
             ps.close();
             conn.close();
@@ -46,25 +47,25 @@ public class DentistaDaoH2 implements IDao<Dentista> {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        return dentista;
+        return endereco;
     }
 
     // Buscar por ID
     @Override
-    public Optional<Dentista> buscar(Integer id) {
+    public Optional<Endereco> buscar(Integer id) {
         Connection conn = configJDBC.connectToDB();
         Statement st = null;
 
         String query = String.format(
-                "SELECT id, nome, email, numMatricula, atendeConvenio " +
-                "FROM dentistas WHERE id = '%s';", id);
-        Dentista dentista = null;
+                "SELECT id, rua, numero, bairro, cidade, estado " +
+                "FROM enderecos WHERE id = '%s';", id);
+        Endereco endereco = null;
 
         try {
             st = conn.createStatement();
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
-                dentista = criarObjetoDentista(rs);
+                endereco = criarObjetoEndereco(rs);
             }
             st.close();
             conn.close();
@@ -72,27 +73,24 @@ public class DentistaDaoH2 implements IDao<Dentista> {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        return dentista != null ? Optional.of(dentista) : Optional.empty();
-        // Utilizamos o método .of quando temos certeza que o objeto tem dados
-        // O método .empty retorna como vazio
-        // Estes métodos do Objeto Optional<T> servem para evitar o NullPointerException
+        return endereco != null ? Optional.of(endereco) : Optional.empty();
     }
 
     // Buscar todos os registros
     @Override
-    public List<Dentista> buscarTodos() {
+    public List<Endereco> buscarTodos() {
         Connection conn = configJDBC.connectToDB();
         PreparedStatement ps = null;
 
-        String query = "SELECT * FROM dentistas;";
-        List<Dentista> dentistas = new ArrayList<>();
+        String query = "SELECT * FROM enderecos;";
+        List<Endereco> enderecos = new ArrayList<>();
 
         try {
             ps = conn.prepareStatement(query);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                dentistas.add(criarObjetoDentista(rs));
+                enderecos.add(criarObjetoEndereco(rs));
             }
             ps.close();
             conn.close();
@@ -100,24 +98,25 @@ public class DentistaDaoH2 implements IDao<Dentista> {
         catch (SQLException e) {
             e.printStackTrace();
         }
-        return dentistas;
+        return enderecos;
     }
 
     // Atualizar
     @Override
-    public Dentista atualizar(Dentista dentista) {
+    public Endereco atualizar(Endereco endereco) {
         Connection conn = configJDBC.connectToDB();
         String query = String.format(
-                "UPDATE dentistas SET nome = '%s', email = '%s', " +
-                "numMatricula = '%s', atendeConvenio = '%s' " +
+                "UPDATE enderecos SET rua = '%s', numero = '%s', " +
+                "bairro = '%s', cidade = '%s', estado = '%s' " +
                 "WHERE id = '%s';",
-                dentista.getNome(),
-                dentista.getEmail(),
-                dentista.getNumMatricula(),
-                dentista.getAtendeConvenio(),
-                dentista.getId());
+                endereco.getRua(),
+                endereco.getNumero(),
+                endereco.getBairro(),
+                endereco.getCidade(),
+                endereco.getEstado(),
+                endereco.getId());
         execute(conn, query);
-        return dentista;
+        return endereco;
     }
 
     // Excluir
@@ -125,7 +124,7 @@ public class DentistaDaoH2 implements IDao<Dentista> {
     public void excluir(Integer id) {
         Connection conn = configJDBC.connectToDB();
         Statement st = null;
-        String query = String.format("DELETE FROM dentistas WHERE " +
+        String query = String.format("DELETE FROM enderecos WHERE " +
                 "id = '%s';", id);
         try {
             st = conn.createStatement();
@@ -140,13 +139,14 @@ public class DentistaDaoH2 implements IDao<Dentista> {
 
     //
 
-    private Dentista criarObjetoDentista(ResultSet rs) throws SQLException {
-        return new Dentista(
+    private Endereco criarObjetoEndereco(ResultSet rs) throws SQLException {
+        return new Endereco(
                 rs.getInt("id"),
-                rs.getString("nome"),
-                rs.getString("email"),
-                rs.getInt("numMatricula"),
-                rs.getInt("atendeConvenio")
+                rs.getString("rua"),
+                rs.getString("numero"),
+                rs.getString("bairro"),
+                rs.getString("cidade"),
+                rs.getString("estado")
         );
     }
 

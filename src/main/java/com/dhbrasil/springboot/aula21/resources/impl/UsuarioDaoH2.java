@@ -1,7 +1,7 @@
-package com.dhbrasil.springboot.aula21.dao.impl;
+package com.dhbrasil.springboot.aula21.resources.impl;
 
-import com.dhbrasil.springboot.aula21.dao.IDao;
-import com.dhbrasil.springboot.aula21.dao.config.ConfigJDBC;
+import com.dhbrasil.springboot.aula21.resources.IDao;
+import com.dhbrasil.springboot.aula21.resources.config.ConfigJDBC;
 import com.dhbrasil.springboot.aula21.model.Usuario;
 
 import java.sql.*;

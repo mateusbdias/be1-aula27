@@ -1,4 +1,4 @@
-package com.dhbrasil.springboot.aula21.dao.config;
+package com.dhbrasil.springboot.aula21.resources.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

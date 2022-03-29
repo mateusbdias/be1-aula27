@@ -1,6 +1,6 @@
 package com.dhbrasil.springboot.aula21.controller;
 
-import com.dhbrasil.springboot.aula21.dao.impl.DentistaDaoH2;
+import com.dhbrasil.springboot.aula21.resources.impl.DentistaDaoH2;
 import com.dhbrasil.springboot.aula21.model.Dentista;
 import com.dhbrasil.springboot.aula21.service.DentistaService;
 import org.springframework.http.HttpStatus;

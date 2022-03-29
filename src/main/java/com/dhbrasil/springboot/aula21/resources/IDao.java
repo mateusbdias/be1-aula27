@@ -1,4 +1,4 @@
-package com.dhbrasil.springboot.aula21.dao;
+package com.dhbrasil.springboot.aula21.resources;
 
 import java.util.List;
 import java.util.Optional;

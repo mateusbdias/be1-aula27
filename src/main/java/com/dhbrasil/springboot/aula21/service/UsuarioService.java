@@ -1,6 +1,6 @@
 package com.dhbrasil.springboot.aula21.service;
 
-import com.dhbrasil.springboot.aula21.dao.IDao;
+import com.dhbrasil.springboot.aula21.resources.IDao;
 import com.dhbrasil.springboot.aula21.model.Usuario;
 
 import java.util.List;
