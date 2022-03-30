@@ -2,13 +2,16 @@ package com.dhbrasil.springboot.aula21.controller;
 
 import com.dhbrasil.springboot.aula21.model.Paciente;
 import com.dhbrasil.springboot.aula21.resources.config.ConfigJDBC;
+import com.dhbrasil.springboot.aula21.resources.impl.EnderecoDaoH2;
 import com.dhbrasil.springboot.aula21.resources.impl.PacienteDaoH2;
+import com.dhbrasil.springboot.aula21.service.EnderecoService;
 import com.dhbrasil.springboot.aula21.service.PacienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/pacientes")
@@ -17,6 +20,8 @@ public class PacienteController {
     private ConfigJDBC configJDBC;
     private PacienteService pacienteService = new PacienteService(
             new PacienteDaoH2());
+    private EnderecoService enderecoService = new EnderecoService(
+            new EnderecoDaoH2());
 
     @PostMapping
     public ResponseEntity<Paciente> salvar(@RequestBody Paciente paciente) {
@@ -47,8 +52,13 @@ public class PacienteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> excluir(@PathVariable Integer id) {
         ResponseEntity<String> response = null;
+
+        Optional<Paciente> p = pacienteService.buscar(id);
+        Integer endId = p.get().getEndereco().getId();
+
         if (pacienteService.buscar(id).isPresent()) {
             pacienteService.excluir(id);
+            enderecoService.excluir(endId);
             response = ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                     "Paciente excluído");
         } else {
